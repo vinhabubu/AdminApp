@@ -6,10 +6,14 @@ import {
   PhoneAndroid,
   Publish,
 } from "@material-ui/icons";
-import { Link } from "react-router-dom";
+import { Link,  useLocation } from "react-router-dom";
 import "./user.css";
+import { withRouter } from "react-router"
 
-export default function User() {
+const  User = (props)=> {
+  const location = useLocation();
+  const propData = location.state;
+  console.log(location)
   return (
     <div className="user">
       <div className="userTitleContainer">
@@ -121,3 +125,5 @@ export default function User() {
     </div>
   );
 }
+
+export default withRouter(User)
