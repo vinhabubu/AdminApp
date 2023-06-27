@@ -1,3 +1,9 @@
+import { Response, RequestInit } from 'node-fetch';
+import fetch from 'node-fetch';
+
+// Continue with the rest of your code
+
+
 export class ResponseError extends Error {
   public response: Response;
 
@@ -47,7 +53,7 @@ function checkStatus(response: Response) {
 export async function request(
   url: string,
   options?: RequestInit,
-): Promise<{} | { err: ResponseError }> {
+): Promise<unknown> {
   const fetchResponse = await fetch(url, options);
   const response = checkStatus(fetchResponse);
   return parseJSON(response);
