@@ -64,6 +64,6 @@ export const { actions: githubRepoFormActions, reducer } = slice;
 
 export const useKidsPreSchoolSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  
+
   return { actions: slice.actions };
 };
