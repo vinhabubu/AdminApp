@@ -1,14 +1,19 @@
 .login {
   width: 100%;
-  height: 100vh;
+  height: 200vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* background: red; */
 }
 
 .loginForm {
+  width: 20%;
+  height: 140vh;
   display: flex;
   flex-direction: column;
+  /* background: blue; */
+
 }
 
 .loginInput {
