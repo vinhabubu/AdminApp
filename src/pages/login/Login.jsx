@@ -2,20 +2,26 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 
 import './login.css';
+import { useKidsPreSchoolSlice } from 'src/redux/slice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { actions } = useKidsPreSchoolSlice();
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      navigate('/home');
-    }
-  }, [navigate]);
+  const dispatch = useDispatch();
+
+
+  // useEffect(() => {
+  //   const token = Cookies.get('token');
+  //   if (token) {
+  //     navigate('/home');
+  //   }
+  // }, [navigate]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -29,19 +35,20 @@ const Login = () => {
         console.log(response.data);
         Cookies.set('user', JSON.stringify(user));
         Cookies.set('token', token);
-        navigate('/home');
+        dispatch(actions.setIsUser(true));
+        navigate('/');
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      navigate('/home');
-    }
-  }, [navigate, email, password]); // Thêm email và password vào mảng dependency
+  // useEffect(() => {
+  //   const token = Cookies.get('token');
+  //   if (token) {
+  //     navigate('/home');
+  //   }
+  // }, [navigate, email, password]); // Thêm email và password vào mảng dependency
 
   return (
     <div className="container-login100 snipcss-iEisH">

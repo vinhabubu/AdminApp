@@ -11,6 +11,7 @@ export interface KidsPreSchoolState {
   loading: boolean;
   error?: RepoErrorType | null;
   repositories: Repo[];
+  isUser?: boolean;
 }
 
 export const enum RepoErrorType {

@@ -50,3 +50,9 @@ export const selectUser = createSelector(
   [selectDomain],
   (KidsPreSchoolState) => KidsPreSchoolState.dataUser,
 );
+
+export const selectIsUser = createSelector(
+  [selectDomain],
+  (KidsPreSchoolState) => KidsPreSchoolState.isUser,
+);
+

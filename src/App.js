@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { selectIsUser } from './redux/slice/selectors';
 
 import Sidebar from './components/sidebar/Sidebar';
 import Topbar from './components/topbar/Topbar';
@@ -11,24 +13,30 @@ import ProductList from './pages/productList/ProductList';
 import Product from './pages/product/Product';
 import NewProduct from './pages/newProduct/NewProduct';
 import Login from './pages/login/Login';
+import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isUserData = useSelector(selectIsUser);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+        <Route
+          path="/login"
+          element={isUserData ? <Navigate to="/" replace /> : <Login />}
+        />
 
-        {isLoggedIn ? (
-          <>
-            <Route
-              path="/"
-              element={
-                <>
-                  <Topbar />
-                  <div className="container">
-                    <Sidebar />
+        {isUserData ? (
+          <Route
+            path="/"
+            element={
+              <>
+                <Topbar />
+                <div className="container">
+                  <Sidebar />
+                  <Outlet /> 
+                  <Routes>
                     <Route index element={<Home />} />
                     <Route path="users" element={<UserList />} />
                     <Route path="user/:userId" element={<User />} />
@@ -36,11 +44,12 @@ function App() {
                     <Route path="products" element={<ProductList />} />
                     <Route path="product/:productId" element={<Product />} />
                     <Route path="newproduct" element={<NewProduct />} />
-                  </div>
-                </>
-              }
-            />
-          </>
+                  </Routes>
+                
+                </div>
+              </>
+            }
+          />
         ) : (
           <Route path="*" element={<Navigate to="/login" replace />} />
         )}
