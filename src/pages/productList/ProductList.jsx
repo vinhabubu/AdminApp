@@ -5,9 +5,17 @@ import { productRows } from '../../dummyData';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Button } from '@material-ui/core';
 
 export default function ProductList() {
-  const [data, setData] = useState(productRows);
+  const [data, setData] = useState([]);
+  const user = localStorage.getItem("dataUser");
+  // console.log(typeof user)
+  const dataUser = JSON.parse(user);
+
+  const config = {
+    headers: { Authorization: `Bearer ${dataUser.token}` }
+};
 
   const data123 = {
     name: ' LED 2 ',
@@ -19,19 +27,16 @@ export default function ProductList() {
   const data12 = JSON.stringify(data123);
 
   useEffect(() => {
-    axios
-      .post('http://localhost:3000/api/led-panels', data12, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(function (response) {
-        // console.log(response.data.isAdmin);
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    axios.get('https://datn-web-led-mn.vercel.app/api/display-content/led-panels/1', config)
+  .then((response) => {
+    // console.log(response.data[0].display_content);
+    setData(response.data);
+   
+  })
+  .catch((error) => {
+    console.error(error);
+  });;
+
   }, []);
 
   const handleDelete = (id) => {
@@ -46,10 +51,12 @@ export default function ProductList() {
       headerName: 'Product',
       width: 200,
       renderCell: (params) => {
+        // console.log(params.row.display_content
+        //   )
         return (
           <div className='productListItem'>
-            <img className='productListImg' src={params.row.img} alt='' />
-            {params.row.name}
+            {/* <img className='productListImg' src={params.row.img} alt='' /> */}
+            {params.row.display_content.name}
           </div>
         );
       },
@@ -72,12 +79,12 @@ export default function ProductList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={'/product/' + params.row.id}>
+            <Link to={'/product/' + params.row.display_content?.id}>
               <button className='productListEdit'>Edit</button>
             </Link>
             <DeleteOutline
               className='productListDelete'
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row.display_content?.id)}
             />
           </>
         );
@@ -87,13 +94,18 @@ export default function ProductList() {
 
   return (
     <div className='productList'>
+      <Link to='/newproduct'>
+          <button className='productAddButton'>Create</button>
+        </Link>
       <DataGrid
         rows={data}
         disableSelectionOnClick
         columns={columns}
-        pageSize={8}
+        // pageSize={8}
         checkboxSelection
+        getRowId={(row) => row.display_content?.id}
       />
+      
     </div>
   );
 }

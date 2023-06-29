@@ -3,10 +3,19 @@ import { DataGrid } from '@material-ui/data-grid';
 import { DeleteOutline } from '@material-ui/icons';
 import { dataUser, userRows } from '../../dummyData';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 export default function UserList() {
-  const [data, setData] = useState(dataUser);
+  const [data, setData] = useState([]);
+  const user = localStorage.getItem("dataUser");
+  // console.log(typeof user)
+  const dataUser = JSON.parse(user);
+
+  const config = {
+    headers: { Authorization: `Bearer ${dataUser.token}` }
+};
+ 
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -15,6 +24,19 @@ export default function UserList() {
   const stateUser = {
     username: 'vinh',
   };
+
+  useEffect(() => {
+    axios.get('https://datn-web-led-mn.vercel.app/api/users', config)
+  .then((response) => {
+    console.log(response.data);
+    setData(response.data);
+   
+  })
+  .catch((error) => {
+    console.error(error);
+  });;
+
+  }, []);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },

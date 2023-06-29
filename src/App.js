@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectIsUser } from './redux/slice/selectors';
@@ -17,17 +17,23 @@ import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  let saved
+  useEffect(() => {
+     saved = localStorage.getItem("dataUser");
+  },[])
+  
+  // console.log('local', saved)
   const isUserData = useSelector(selectIsUser);
 
   return (
     <BrowserRouter>
-      <Routes>
+      <Routes >
         <Route
           path="/login"
-          element={isUserData ? <Navigate to="/" replace /> : <Login />}
+          element={saved !== null ? <Navigate to="/" replace /> : <Login />}
         />
 
-        {isUserData ? (
+        {saved !==null ? (
           <Route
             path="/"
             element={
@@ -36,20 +42,20 @@ function App() {
                 <div className="container">
                   <Sidebar />
                   <Outlet /> 
-                  <Routes>
-                    <Route index element={<Home />} />
-                    <Route path="users" element={<UserList />} />
+                 
+                
+                </div>
+              </>
+            }
+          >
+            <Route index element={<Home />} />
+                    <Route  path="users" element={<UserList />} />
                     <Route path="user/:userId" element={<User />} />
                     <Route path="newUser" element={<NewUser />} />
                     <Route path="products" element={<ProductList />} />
                     <Route path="product/:productId" element={<Product />} />
                     <Route path="newproduct" element={<NewProduct />} />
-                  </Routes>
-                
-                </div>
-              </>
-            }
-          />
+          </Route>
         ) : (
           <Route path="*" element={<Navigate to="/login" replace />} />
         )}
@@ -59,3 +65,4 @@ function App() {
 }
 
 export default App;
+

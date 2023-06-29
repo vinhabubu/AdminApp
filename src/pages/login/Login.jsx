@@ -32,7 +32,8 @@ const Login = () => {
       })
       .then((response) => {
         const { token, user } = response.data;
-        console.log(response.data);
+        // console.log(response.data.token);
+        localStorage.setItem("dataUser", JSON.stringify(response.data));
         Cookies.set('user', JSON.stringify(user));
         Cookies.set('token', token);
         dispatch(actions.setIsUser(true));
